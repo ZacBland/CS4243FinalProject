@@ -20,7 +20,7 @@ sem_t * create_semaphores(int n){
             perror("Semaphore init");
             exit(1);
         }
-        printf("Semaphore %d available\n", i);
+        //printf("Semaphore %d available\n", i);
     }
     
     return semaphores;
@@ -36,7 +36,7 @@ void destroy_semaphores(sem_t * semaphores, int n){
             perror("Semaphore destroy");
             exit(1);
         }
-        printf("Destroyed Semaphore %d\n", i);
+        //printf("Destroyed Semaphore %d\n", i);
     }
 }
 /*
@@ -44,26 +44,74 @@ sem_t check_avaibility(sem_t * semaphores, int n){
     
 }
 */
+
+int request(char* msg, int pipe){
+    if(write(pipe, msg, sizeof(msg)) < 0){
+        return -1;
+    }
+    else{
+        return 0;
+    }
+}
+
+char wait_msg[5] = "wait";
+
 int main(){
 
     int num_of_employees = 2;
     int num_of_couches = 2;
 
+    int p1[2];
+    int p2[2];
+    if(pipe(p1) < 0){
+        perror("pipe!\n");
+    }
+    if(pipe(p2) < 0){
+        perror("pipe!\n");
+    }
+
     if(fork() == 0){
+        close(p1[0]);
+        close(p2[1]);
+
+        int send = 0;
         if(fork() == 0){
-            printf("Hello from child 2! >>\n");
-            int x;
-            scanf("%d", &x);
-            printf("Child 2 output: %d\n", x);
+            while(send != 0);
+            send += 1;
+            if(request(wait_msg, p1[1]) < 0){
+                exit(1);
+            }
+            send -= 1;
         }
         else{
-            printf("Hello from child 1!\n");
-            int x;
-            scanf("%d", &x);
-            printf("Child 1 output: %d\n", x);
+            while(send != 0);
+            send += 1;
+            if(request(wait_msg, p1[1]) < 0){
+                exit(1);
+            }
+            send -= 1;
         }
     }
     else{
+        close(p1[1]);
+        close(p2[0]);
+
+        char buffer[50];
+        if(read(p1[0], buffer, 50) < 0){
+            perror("read");
+            exit(1);
+        }
+        puts(buffer);
+
+        bzero(buffer, 50);
+        if(read(p1[0], buffer, 50) < 0){
+            perror("read");
+            exit(1);
+        }
+        puts(buffer);
+
+        
+
         wait(NULL);
 
         sem_t* employees = create_semaphores(num_of_employees);

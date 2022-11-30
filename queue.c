@@ -10,13 +10,14 @@ typedef struct node node;
 
 struct queue
 {
+    int max;
     int num;
     node *head;
     node *tail;
 };
 typedef struct queue queue;
 
-void init(queue *q){
+void init(queue *q, int max){
     /* init
     Initializes a queue struct
 
@@ -24,6 +25,7 @@ void init(queue *q){
         q (queue): Queue struct
     */
     q->num = 0;
+    q->max = max;
     q->head = NULL;
     q->tail = NULL;
 }
@@ -39,6 +41,19 @@ int isEmpty(queue *q){
         (int): 1 or 0 based if the queue is empty.
     */
     return (q->tail == NULL);
+}
+
+int isFull(queue *q){
+    /**
+     * Checks if queue is full
+     * 
+     * Args:
+     *      q (queue): Queue struct to check if full.
+     * 
+     * Returns: 
+     *      (int): returns 1 if full, 0 if not
+     */
+    return (q->num >= q->max);
 }
 
 void add(queue *q, int socket){

@@ -11,6 +11,7 @@
 #define MAXCHAR 1024
 #define PORT 8080
 #define IP "127.0.0.1"
+#define QUEUE_MAX 5
 
 //#include "../shared/utils.h"
 
@@ -24,7 +25,6 @@ int num_of_sofas = 1;
 queue *q;
 int * assist_sems;
 int * couch_sems;
-
 
 void manage_couches(){
     /**
@@ -185,7 +185,7 @@ int main() {
     
     //Initialize queue
     q = malloc(sizeof(queue));
-    init(q);
+    init(q, QUEUE_MAX);
 
     //Create manager threads
     pthread_t couch_manager;
@@ -205,6 +205,13 @@ int main() {
         client_sock = accept(server_sock, (struct sockaddr_in*)&client_addr, &addr_size);
         if (client_sock < 0) {
             exit(1);
+        }
+
+        //Check if queue is full
+        if(isFull(q)){
+            close(client_sock);
+            printf("Client rejected, queue is full!\n");
+            continue;
         }
 
         printf("[+] Client connected from %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));

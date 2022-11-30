@@ -39,7 +39,7 @@ int main() {
         printf("[-] Connection error...\n");
         exit(1);
     }
- 
+    
     printf("Connected to the server.\n");
 
     for (;;) {

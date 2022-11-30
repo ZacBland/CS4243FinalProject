@@ -25,11 +25,19 @@ queue *q;
 int * assist_sems;
 int * couch_sems;
 
+
 void manage_couches(){
+    /**
+     * Thread function to manage couch semaphores
+     */
+
+    //Loop indefinitely
     while(1){
+
         //wait for queue to fill
-        printf("waiting for queue to fill...\n");
         while(isEmpty(q));
+
+        //get next client in queue
         int next = pop(q);
         
         //send message to client
@@ -37,10 +45,14 @@ void manage_couches(){
             perror("send");
         }
 
+        //wait for couch to become available
         int couch;
         while((couch = check_avaibility(couch_sems, num_of_sofas)) < 0);
+
+        //put client on couch
         take(couch_sems, couch, next);
 
+        //send message to client
         char message[50];
         sprintf(message, "Currently on Sofa #%d.\n", couch);
         if(send(next, message, 50, 0) < 0){
@@ -50,20 +62,30 @@ void manage_couches(){
 }
 
 void manage_assistants(){
+    /**
+     * Thread function to manage assistants.
+     */
     while(1){
-        for(int i = 0; i < num_of_assistants; i++){
+        //Loop through couches indefinitely
+        for(int i = 0; i < num_of_sofas; i++){
+            //check if couch has client
             if(couch_sems[i] != 0){
                 int socket = couch_sems[i];
+
                 //send message to client
                 if(send(socket, "You are next in line for an assistant.\n", 50, 0) < 0){
                     perror("send");
                 }
 
+                //wait for next assistant to become available
                 int assistant;
                 while((assistant = check_avaibility(assist_sems, num_of_assistants)) < 0);
                 printf("found assistant. #%d\n", assistant);
+
+                //give back couch that client was occupying
                 post(couch_sems, i);
 
+                //send message to client
                 char message[50];
                 sprintf(message, "Currently with Assistant #%d.\n", assistant);
                 if(send(socket, message, 50, 0) < 0){
@@ -75,6 +97,7 @@ void manage_assistants(){
                     perror("send");
                 }
 
+                //take assistance semaphore
                 take(assist_sems, assistant, socket);
 
             }
@@ -83,10 +106,19 @@ void manage_assistants(){
 }
 
 void assistant_thread(void* arg){
+    /**
+     * Assistant thread to ask user options
+     */
+
+    //get assistant index from arg
     int index = (int) arg;
+
     while(1){
+        //wait for client socket in array
         while(assist_sems[index] == 0);
         int socket = assist_sems[index];
+
+        //run menu options 
 
         //TODO : ADD MENU HERE
         while(1){
@@ -102,6 +134,7 @@ void assistant_thread(void* arg){
             }
         }
 
+        //Once finished, give back assistant semaphore
         post(assist_sems, index);
     }
 }
@@ -146,18 +179,21 @@ int main() {
     // TODO: Read and store options.txt
     //struct Option* options = readOptions("../options.txt", 2);
 
+    //Create semaphore arrays
     assist_sems = create_semaphores(num_of_assistants);
     couch_sems = create_semaphores(num_of_sofas);
     
+    //Initialize queue
     q = malloc(sizeof(queue));
     init(q);
 
+    //Create manager threads
     pthread_t couch_manager;
     pthread_t assistant_manager;
-
     pthread_create(&couch_manager, NULL, &manage_couches, NULL);
     pthread_create(&assistant_manager, NULL, &manage_assistants, NULL);
     
+    //Create assistant threads
     pthread_t assistants[num_of_assistants];
     for(int i = 0; i < num_of_assistants; i++){
         pthread_create(&assistants[i], NULL, &assistant_thread, (void *) i);
@@ -177,9 +213,9 @@ int main() {
         add(q, client_sock);
     }
 
+    //Join all threads
     pthread_join(&couch_manager, NULL);
     pthread_join(&assistant_manager, NULL);
-
     for(int i = 0; i < num_of_assistants; i++){
         pthread_join(&assistants[i], NULL);
     }

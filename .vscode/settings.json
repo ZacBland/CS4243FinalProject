@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "semaphore.h": "c",
+        "string.h": "c",
+        "queue.h": "c"
+    }
+}

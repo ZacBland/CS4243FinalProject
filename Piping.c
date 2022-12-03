@@ -13,7 +13,7 @@
 #include <string.h>
 #include <sys/wait.h>
 
-int BUFFER_SIZE = 254;
+int BUFFER_SIZE = 1024;
 
 /*
     @Param
@@ -24,12 +24,14 @@ int BUFFER_SIZE = 254;
         columns: Number of columns in the array
         file_data: 2D array containing the file information
 */
-void piping(char *ref, int input_pipe[2], int output_pipe[2], int rows, int columns, char **file_data) {
+void piping(char *ref, int input_pipe[2], int output_pipe[2], int rows, int columns, char ***file_data) {
 
     int rw_result; // Read/write result
     char buffer[BUFFER_SIZE];
     char item_buffer[BUFFER_SIZE];
     char temp_buffer[BUFFER_SIZE];
+    char *ret_ptr = buffer; // return pointer
+    int ret_val; // return value from assigning to pointer
 
     // Begin listening to pipe
     while(1) {
@@ -47,90 +49,128 @@ void piping(char *ref, int input_pipe[2], int output_pipe[2], int rows, int colu
             perror("Error reading from pipe");
         }
 
-        if(strcmp(buffer, "purchase") == 0)
+        /*
+            TODO: Get fixed buffer size of appropriate size
+        */
+
+        // rw = row, cl = column
+        // Option 1 - Display All Items
+        if(strcmp(buffer, "display") == 0)
         {
-            for(int i = 0; i < rows; i++)
+            for(int rw = 0; rw < rows; rw++)
             {
-                // When we find the ref, update remove one from the quantity column
-                if(strcmp(&file_data[i][0], ref) == 0)
+                for(int cl = 0; cl < columns; cl++)
                 {
-                    // Update item count
-                    int count = (atoi(&file_data[i][6])) - 1;
-                    strcpy(buffer,"");
-                    for(int j = 0; j < columns; j++)
+                    // The assignment specifies that general display does not include description or quantity, so we skip those two columns here
+                    if((cl == 4) || (cl == 5))
                     {
-                        if(j == 6) {
-			    sprintf(buffer, "%d", count);
-                        } else {
-                            strcat(buffer, &file_data[i][j]);
-                        }
+                        continue;
                     }
-                    rw_result = write(output_pipe[1], buffer, BUFFER_SIZE);
+                    ret_val = sprintf(ret_ptr, "%s%5s", &file_data[rw][cl], " ");
                 }
             }
-        } else if(strcmp(buffer, "return") == 0) {
-            for(int i = 0; i < rows; i++)
-            {
-                // When we find the ref, update remove one from the quantity column
-                if(strcmp(&file_data[i][0], ref) == 0)
-                {
-                    // Update item count
-                    int count = (atoi(&file_data[i][6])) - 1;
-                    strcpy(buffer,"");
-                    for(int j = 0; j < columns; j++)
-                    {
-                        if(j == 6) {
-			    sprintf(buffer, "%d", count);
-                        } else {
-                            strcat(buffer, &file_data[i][j]);
-                        }
-                    }
-                    rw_result = write(output_pipe[1], buffer, BUFFER_SIZE);
-                }
-            }
-        } else if(strcmp(buffer, "view") == 0) {
-            for(int i = 0; i < rows; i++)
-            {
-                if(strcmp(&file_data[i][0], ref) == 0)
-                {
-                    for(int j = 0; j < columns; j++)
-                    {
-                        strcat(temp_buffer, &file_data[i][j]);
-                    }
-                }
-            }
-            printf("Writing: %s\n", buffer);
+            ret_val = sprintf(ret_ptr, "\n");
             rw_result = write(output_pipe[1], buffer, BUFFER_SIZE);
         }
-    } // while loop
+
+        // Option 2 - View Specific Item
+        if(strcmp(buffer, "specific") == 0)
+        {
+            for(int rw = 0; rw < rows; rw++)
+            {
+                if(strcmp(&file_data[rw][0], ref) == 0)
+                {
+                    for(int cl = 0; cl < columns; cl++)
+                    {
+                        ret_val = sprintf(ret_ptr, "%s%5s", &file_data[rw][cl], " ");
+                    }
+                    break;
+                }
+            }
+            ret_val = sprintf(ret_ptr, "\n");
+            rw_result = write(output_pipe[1], buffer, BUFFER_SIZE);
+        }
+
+        // Option 3 - Purchase
+        if(strcmp(buffer, "purchase") == 0)
+        {
+            for(int rw = 0; rw < rows; rw++)
+            {
+                if(strcmp(&file_data[rw][0], ref) == 0)
+                {
+                    // Getting int value of 
+                    int count = (atoi(&file_data[rw][6])) - 1;
+                    char *temp;
+                    sprintf(temp, "%d%5s", count, " ");
+                    strcpy(&file_data[rw][6], temp);
+                    break;
+                }
+            }
+            rw_result = write(output_pipe[1], buffer, BUFFER_SIZE);
+        }
+        
+        // Option 4 - Return
+        if(strcmp(buffer, "return") == 0)
+        {
+            for(int rw = 0; rw < rows; rw++)
+            {
+                if(strcmp(&file_data[rw][0], ref) == 0)
+                {
+                    // Getting int value of 
+                    int count = (atoi(&file_data[rw][6])) + 1;
+                    char *temp;
+                    sprintf(temp, "%d%5s", count, " ");
+                    strcpy(&file_data[rw][6], temp);
+                    break;
+                }
+            }
+            rw_result = write(output_pipe[1], buffer, BUFFER_SIZE);
+        }
+    }
     printf("Piping finished.\n");
 }
 
 int main() {
 
     // Temp, test data
-    char *data[] = {
-        "B4084600",	"rings","Love ring	yellow gold", "Love ring, 18K yellow gold. Width: 5.5mm.",	"2","1650"
-    };
-    char *command = "view";
+    // char *data[] = {
+    //     "B4084600",	"rings","Love ring	yellow gold", "Love ring, 18K yellow gold. Width: 5.5mm.",	"2","1650"
+    // };
+    // char *command = "view";
 
-    int ip[2];
-    int op[2];
-    pipe(ip);
-    pipe(op);
-    char buffer[254];
-    if(fork() == 0) {
-        close(op[1]);
-        write(ip[1], command, sizeof(command));
-        piping("B4084600", ip, op, 6, 150, data);
-        //write(ip[0], command, sizeof(command));
-        printf("Wrote successfully\n");
-        wait(NULL);
-    } else {
-        exit(0);
+    // int ip[2];
+    // int op[2];
+    // pipe(ip);
+    // pipe(op);
+    // char buffer[254];
+    // if(fork() == 0) {
+    //     close(op[1]);
+    //     write(ip[1], command, sizeof(command));
+    //     piping("B4084600", ip, op, 6, 150, data);
+    //     //write(ip[0], command, sizeof(command));
+    //     printf("Wrote successfully\n");
+    //     wait(NULL);
+    // } else {
+    //     exit(0);
 
-    }
+    // }
+
+    /*
+        Thoughts for forking:
+        - Keeping track of queue names
+        - Maybe passing client ID
+        char unique_name[100] = "";
+        char temp_buffer[100];
+        sprintf(temp_buffer, "%d", clientID);
+        strcat(unique_name, "Queue#");
+        strcat(unique_name, temp_buffer);
+
+
     
+    
+    
+    */
+
 
     printf("Ran successfully.\n");
     return 0;

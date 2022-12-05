@@ -6,72 +6,49 @@
 #include <semaphore.h>
 
 
-sem_t * create_semaphores(int n){
+int * create_semaphores(int n){
     /*  create_semaphores
     *   Creates an array of semaphores based on the number inputted.
     *   
     *   Returns array of sem_ts
     */
 
-    sem_t* semaphores = (sem_t *) malloc(sizeof(sem_t) * n);
+    int* semaphores = (int *) malloc(sizeof(int) * n);
 
     for(int i = 0; i < n; i++){
-        if(sem_init(&semaphores[i], 0, 1) < 0){
-            perror("Semaphore init");
-            exit(1);
-        }
-        printf("Semaphore %d available\n", i);
+        semaphores[i] = 0;
+        //printf("Semaphore %d available\n", i);
     }
     
     return semaphores;
 }
 
-void destroy_semaphores(sem_t * semaphores, int n){
-    /*  destroy_semaphores
-    *   Destroys an array of semaphores
-    */
-
+int check_avaibility(int * semaphores, int n){
+    /**
+     * @brief check if semaphore in array is available
+     * 
+     * @returns returns index of open semaphore
+     *          returns -1 if none are available
+     */
     for(int i = 0; i < n; i++){
-        if(sem_destroy(&semaphores[i]) < 0){
-            perror("Semaphore destroy");
-            exit(1);
+        if(semaphores[i] == 0){
+            return i;
         }
-        printf("Destroyed Semaphore %d\n", i);
     }
+    return -1;
 }
-/*
-sem_t check_avaibility(sem_t * semaphores, int n){
-    
+
+void take(int * semaphores, int index, int socket){
+    /**
+     * @brief take control of semaphore
+     * 
+     */
+    semaphores[index] = socket;
 }
-*/
-int main(){
-
-    int num_of_employees = 2;
-    int num_of_couches = 2;
-
-    if(fork() == 0){
-        if(fork() == 0){
-            printf("Hello from child 2! >>\n");
-            int x;
-            scanf("%d", &x);
-            printf("Child 2 output: %d\n", x);
-        }
-        else{
-            printf("Hello from child 1!\n");
-            int x;
-            scanf("%d", &x);
-            printf("Child 1 output: %d\n", x);
-        }
-    }
-    else{
-        wait(NULL);
-
-        sem_t* employees = create_semaphores(num_of_employees);
-        sem_t* couches = create_semaphores(num_of_couches);
-
-        printf("Hello from parent!\n");
-
-        destroy_semaphores(employees, num_of_employees);
-        destroy_semaphores(couches, num_of_couches);
-    }
+void post(int * semaphores, int index){
+    /**
+     * @brief give back semaphore
+     * 
+     */
+    semaphores[index] = 0;
 }

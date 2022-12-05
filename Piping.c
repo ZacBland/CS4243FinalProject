@@ -66,7 +66,7 @@ void piping(char *ref, int input_pipe[2], int output_pipe[2], int rows, int colu
                     {
                         continue;
                     }
-                    ret_val = sprintf(ret_ptr, "%s%5s", &file_data[rw][cl], " ");
+                    ret_val = sprintf(ret_ptr, "%s%5s", file_data[rw][cl], " ");
                 }
             }
             ret_val = sprintf(ret_ptr, "\n");
@@ -78,11 +78,11 @@ void piping(char *ref, int input_pipe[2], int output_pipe[2], int rows, int colu
         {
             for(int rw = 0; rw < rows; rw++)
             {
-                if(strcmp(&file_data[rw][0], ref) == 0)
+                if(strcmp(file_data[rw][0], ref) == 0)
                 {
                     for(int cl = 0; cl < columns; cl++)
                     {
-                        ret_val = sprintf(ret_ptr, "%s%5s", &file_data[rw][cl], " ");
+                        ret_val = sprintf(ret_ptr, "%s%5s", file_data[rw][cl], " ");
                     }
                     break;
                 }
@@ -96,13 +96,14 @@ void piping(char *ref, int input_pipe[2], int output_pipe[2], int rows, int colu
         {
             for(int rw = 0; rw < rows; rw++)
             {
-                if(strcmp(&file_data[rw][0], ref) == 0)
+                if(strcmp(file_data[rw][0], ref) == 0)
                 {
                     // Getting int value of 
-                    int count = (atoi(&file_data[rw][6])) - 1;
+                    int count = (atoi(file_data[rw][6])) - 1;
                     char *temp;
                     sprintf(temp, "%d%5s", count, " ");
-                    strcpy(&file_data[rw][6], temp);
+                    strcpy(file_data[rw][5], temp);
+                    strcpy(buffer, file_data[rw][6]);
                     break;
                 }
             }
@@ -114,13 +115,14 @@ void piping(char *ref, int input_pipe[2], int output_pipe[2], int rows, int colu
         {
             for(int rw = 0; rw < rows; rw++)
             {
-                if(strcmp(&file_data[rw][0], ref) == 0)
+                if(strcmp(file_data[rw][0], ref) == 0)
                 {
                     // Getting int value of 
-                    int count = (atoi(&file_data[rw][6])) + 1;
+                    int count = (atoi(file_data[rw][6])) + 1;
                     char *temp;
                     sprintf(temp, "%d%5s", count, " ");
-                    strcpy(&file_data[rw][6], temp);
+                    strcpy(file_data[rw][5], temp);
+                    strcpy(buffer, file_data[rw][6]);
                     break;
                 }
             }
@@ -130,48 +132,9 @@ void piping(char *ref, int input_pipe[2], int output_pipe[2], int rows, int colu
     printf("Piping finished.\n");
 }
 
-int main() {
-
-    // Temp, test data
-    // char *data[] = {
-    //     "B4084600",	"rings","Love ring	yellow gold", "Love ring, 18K yellow gold. Width: 5.5mm.",	"2","1650"
-    // };
-    // char *command = "view";
-
-    // int ip[2];
-    // int op[2];
-    // pipe(ip);
-    // pipe(op);
-    // char buffer[254];
-    // if(fork() == 0) {
-    //     close(op[1]);
-    //     write(ip[1], command, sizeof(command));
-    //     piping("B4084600", ip, op, 6, 150, data);
-    //     //write(ip[0], command, sizeof(command));
-    //     printf("Wrote successfully\n");
-    //     wait(NULL);
-    // } else {
-    //     exit(0);
-
-    // }
-
-    /*
-        Thoughts for forking:
-        - Keeping track of queue names
-        - Maybe passing client ID
-        char unique_name[100] = "";
-        char temp_buffer[100];
-        sprintf(temp_buffer, "%d", clientID);
-        strcat(unique_name, "Queue#");
-        strcat(unique_name, temp_buffer);
+// int main() {
 
 
-    
-    
-    
-    */
-
-
-    printf("Ran successfully.\n");
-    return 0;
-}
+//     printf("Ran successfully.\n");
+//     return 0;
+// }

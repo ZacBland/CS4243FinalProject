@@ -1,0 +1,47 @@
+ref	category	title	tags	description	quantity	price
+B4084600	rings	Love ring	yellow gold	"Love ring, 18K yellow gold. Width: 5.5mm."	2	1650
+B4084900	rings	Love ring	platinum	"Love ring, 950/1000 platinum. Width: 5.5mm."	4	3650
+B4084800	rings	Love ring	pink gold	"Love ring, 18K rose gold. Width: 5.5mm."	2	1650
+B4084700	rings	Love ring	white gold	"Love ring, 18K white gold. Width: 5.5mm."	1	1770
+B4085000	rings	Love wedding band	yellow gold	"Love wedding band, 18K yellow gold. Width: 3.6mm."	1	1070
+B4085200	rings	Love wedding band	pink gold	"Love wedding band, 18K rose gold. Width: 3.6mm."	3	1070
+B4085100	rings	Love wedding band	white gold	"Love wedding band, 18K white gold. Width: 3.6mm."	1	1140
+B4085300	rings	Love wedding band	platinum	"Love wedding band, 950/1000 platinum. Width: 3.6mm."	2	2380
+B4032400	rings	"Love ring, 3 diamonds"	"yellow gold, diamonds"	"Love ring, 18K yellow gold, set with 3 brilliant-cut diamonds totaling 0.22 carats. Width: 5.5mm."	2	3500
+B4087500	rings	"Love ring, 3 diamonds"	"pink gold, diamonds"	"Love ring, 18K rose gold, set with 3 brilliant-cut diamonds totaling 0.22 carats. Width: 5.5mm."	1	3500
+B4032500	rings	"Love ring, 3 diamonds"	"white gold, diamonds"	"Love ring, 18K white gold, set with 3 brilliant-cut diamonds totaling 0.22 carats. Width: 5.5mm."	4	3750
+B6035517	bracelets	Love bracelet	yellow gold	"Love bracelet, 18K yellow gold. Sold with a screwdriver. Width: 6.1mm."	1	6300
+B6035617	bracelets	Love bracelet	pink gold	"Love bracelet, 18K rose gold. Sold with a screwdriver. Width: 6.1mm."	3	6300
+B6035417	bracelets	Love bracelet	white gold	"Love bracelet, 18K white gold. Sold with a screwdriver. Width: 6.1mm."	4	6750
+B6035917	bracelets	"Love bracelet, 4 diamonds"	"yellow gold, diamonds"	"Love bracelet, 18K yellow gold, set with 4 brilliant-cut diamonds totaling 0.42 carats. Sold with a screwdriver. Width: 6.1mm."	1	10100
+B6036017	bracelets	"Love bracelet, 4 diamonds"	"pink gold, diamonds"	"Love bracelet, 18K rose gold, set with 4 brilliant-cut diamonds totaling 0.42 carats. Sold with a screwdriver. Width: 6.1mm."	4	10100
+B6035817	bracelets	"Love bracelet, 4 diamonds"	"white gold, diamonds"	"Love bracelet, 18K white gold, set with 4 brilliant-cut diamonds totaling 0.42 carats. Sold with a screwdriver. Width: 6.1mm."	3	10800
+B6029817	bracelets	"Love bracelet, 1 diamond"	"yellow gold, diamond"	"Love bracelet, 18K yellow gold, set with 1 brilliant-cut diamond totaling 0.10 carats. Width: 6.1mm."	1	5300
+B6029917	bracelets	"Love bracelet, 1 diamond"	"white gold, diamond"	"Love bracelet, 18K white gold, set with 1 brilliant-cut diamond totaling 0.10 carats. Width: 6.1mm."	1	5700
+B7212400	necklaces	Love necklace	yellow gold	"Love necklace, 18K yellow gold. Inner diameter 8mm. Chain length: 440mm."	4	2160
+B7014600	necklaces	"Love necklace, 3 diamonds"	"white gold, diamonds"	"Love necklace, 18K white gold, set with 3 brilliant-cut diamonds totaling 0.07 carats. Inner diameter 16mm. Chain length: 420mm."	3	4250
+B7212300	necklaces	Love necklace	pink gold	"Love necklace, 18K rose gold. Inner diameter 8mm. Chain length: 440mm."	2	2160
+B7219500	necklaces	"Love necklace, 2 diamonds"	"yellow gold, diamonds"	"Love necklace, 18K yellow gold, set with 2 brilliant-cut diamonds totaling 0.03 carats. Inner diameter: 7.8 mm. Chain length: 392 mm."	1	2230
+B7224509	necklaces	"Love necklace, 2 diamonds"	"pink gold, diamonds"	"Love necklace, 18K rose gold, set with 2 brilliant-cut diamonds totaling 0.03 carats. Inner diameter 7.8mm. Chain length: 392mm."	4	2230
+B7212500	necklaces	Love necklace	white gold	"Love necklace, 18K white gold. Inner diameter 8mm. Chain length: 440mm."	1	2310
+B7219400	necklaces	"Love necklace, 2 diamonds"	"white gold, diamonds"	"Love necklace, 18K white gold, set with 2 brilliant-cut diamonds totaling 0.03 carats. Inner diameter: 7.8 mm. Chain length: 392 mm."	3	2390
+B7014200	necklaces	Love necklace	yellow gold	"Love necklace, 18K yellow gold. Inner diameter 16mm. Chain length: 420mm."	4	3050
+B7014400	necklaces	Love necklace	pink gold	"Love necklace, 18K rose gold. Inner diameter 16mm. Chain length: 420mm."	1	3050
+B7219700	necklaces	"Love necklace, 6 diamonds"	"pink gold, white gold, diamonds"	"Love necklace, 18K rose gold, 18K white gold, set with 6 brilliant-cut diamonds totaling 0.01 carats. Mini cicle inner diameter: 5.6mm Baby love inner diameter: 8mm Chain length: 370mm."	4	3150
+B7014300	necklaces	Love necklace	white gold	"Love necklace, 18K white gold. Inner diameter 16mm. Chain length: 420mm."	2	3250
+B7224900	necklaces	Trinity necklace	"white gold, yellow gold, pink gold, diamond"	"Trinity necklace, 18K white gold, 18K pink gold, 18K yellow gold, set with 1 brilliant-cut diamond totaling 0.18 carats, pink gold chain. Inner diameter: 4.75 mm. Adjustable chain length: 38-41 cm."	3	3100
+B7224577	necklaces	Trinity necklace	"white gold, yellow gold, pink gold"	"Trinity de Cartier chain long necklace, 18K white gold, 18K pink gold, 18K yellow gold."	3	3750
+B7224532	necklaces	Trinity necklace	"white gold, diamonds, ceramic"	"Trinity necklace, 18K white gold, black ceramic, set with 14 brilliant-cut diamonds totaling 0.21 carats."	1	4500
+B3045500	necklaces	Trinity necklace	"white gold, ceramic, diamonds"	"Trinity necklace, small model, 18K white gold, black ceramic, set with 44 brilliant-cut diamonds totaling 0.19 carats. Inner diameter 15.4mm."	4	5100
+B7058500	necklaces	Trinity necklace	"white gold, yellow gold, pink gold, diamonds"	"Trinity necklace, 18K white gold, 18K rose gold, 18K yellow gold, set with 53 brilliant-cut diamonds totaling 0.22 carats, rose gold chain. Inner diameter 13.4mm."	3	6950
+B8301421	earrings	Love single earring	yellow gold	"Love single earring, 18K yellow gold. Diameter 6 mm. Sold individually."	4	500
+B8301422	earrings	Love single earring	pink gold	"Love single earring, 18K pink gold. Diameter 12mm. Sold individually."	4	810
+B8301254	earrings	Love earrings	pink gold	"Love earrings, 18K rose gold. Inner diameter 7.2mm."	2	1370
+B8301255	earrings	Love earrings	yellow gold	"Love earrings, 18K yellow gold. Inner diameter 7.2mm."	2	1370
+B8301256	earrings	Love earrings	white gold	"Love earrings, 18K white gold. Inner diameter 7.2mm."	2	1470
+B8301424	earrings	Love single earring	"white gold, diamond"	"Love earring, 18K white gold, set with 12 brilliant-cut diamonds totaling 0.05 carat. Diameter: 12 mm. Sold individually."	3	1750
+B8028800	earrings	Love earrings	yellow gold	"Love earrings, 18K yellow gold. Width: 2.65mm. Inner diameter 10mm."	2	1770
+B8029000	earrings	Love earrings	pink gold	"Love earrings, 18K rose gold. Width: 2.65mm. Inner diameter 10mm."	2	1770
+B8028900	earrings	Love earrings	white gold	"Love earrings, 18K white gold. Width: 2.65mm. Inner diameter 10mm."	2	1890
+B8022500	earrings	Love earrings	yellow gold	"Love earrings, 18K yellow gold. Width: 5.7mm."	1	3150
+B8028200	earrings	Love earrings	yellow gold	"Love earrings, 18K yellow gold. Width: 3.6mm. Inner diameter 32.6mm."	4	3750

@@ -110,106 +110,106 @@ struct catalogStruct readFile(char *filename)
     return filesData;
 }
 
-void display(char *printToClient)
-{
-    // Testing code
-    printf("%s", printToClient);
-    // Use send code when implemented in server, and replace newSocket with the name of the socket.
-    // send(newSocket, printToClient, strlen(printToClient), 0);
-}
+// void display(char *printToClient)
+// {
+//     // Testing code
+//     printf("%s", printToClient);
+//     // Use send code when implemented in server, and replace newSocket with the name of the socket.
+//     // send(newSocket, printToClient, strlen(printToClient), 0);
+// }
 
-int main(int argc, char *argv[])
-{
+// int main(int argc, char *argv[])
+// {
 
-    bool end = false;
-    char userInput[256];
+//     bool end = false;
+//     char userInput[256];
 
-    // Read file
-    char filename[] = "cartier_catalog.txt";
-    char *printToClient;
-    struct catalogStruct filesData = readFile(filename);
+//     // Read file
+//     char filename[] = "cartier_catalog.txt";
+//     char *printToClient;
+//     struct catalogStruct filesData = readFile(filename);
 
-    while (end == false)
-    {
-        printToClient = "\nEnter the number of the option to select it\n1. Looking at the jewelry menu\n2. Making specific jewelry inquiry\n3. Making purchase\n4. Returning the purchase\n5. Exit\n\n";
-        display(printToClient);
+//     while (end == false)
+//     {
+//         printToClient = "\nEnter the number of the option to select it\n1. Looking at the jewelry menu\n2. Making specific jewelry inquiry\n3. Making purchase\n4. Returning the purchase\n5. Exit\n\n";
+//         display(printToClient);
 
-        fgets(userInput, 256, stdin);
-        char temp[100];
-        strcpy(temp, userInput);
-        userInput[strcspn(userInput, "\n")] = 0;
+//         fgets(userInput, 256, stdin);
+//         char temp[100];
+//         strcpy(temp, userInput);
+//         userInput[strcspn(userInput, "\n")] = 0;
 
-        if ((strncmp(userInput, "exit", 3) == 0) || (strncmp(userInput, "Exit", 3) == 0) || (strncmp(userInput, "5", 1) == 0))
-        {
-            printToClient = "\nExiting program...";
-            display(printToClient);
-            end = true;
-        }
-        else if ((strcmp(userInput, "1") == 0))
-        {
-            printToClient = "\nPrinting jewelry menu:\n";
-            display(printToClient);
+//         if ((strncmp(userInput, "exit", 3) == 0) || (strncmp(userInput, "Exit", 3) == 0) || (strncmp(userInput, "5", 1) == 0))
+//         {
+//             printToClient = "\nExiting program...";
+//             display(printToClient);
+//             end = true;
+//         }
+//         else if ((strcmp(userInput, "1") == 0))
+//         {
+//             printToClient = "\nPrinting jewelry menu:\n";
+//             display(printToClient);
 
-            // Display the contents of catalog struct
-            for (int i = 1; i < filesData.sizeOfRow; i++)
-            {
-                for (int j = 0; j < filesData.sizeOfCol; j++)
-                {
-                    // TODO: call display function for each row to be displayed
-//                   if(j == 0){
-//                     char message1[100];
-//                     strcpy(message1, filesData.recordArray[0][j]);
+//             // Display the contents of catalog struct
+//             for (int i = 1; i < filesData.sizeOfRow; i++)
+//             {
+//                 for (int j = 0; j < filesData.sizeOfCol; j++)
+//                 {
+//                     // TODO: call display function for each row to be displayed
+// //                   if(j == 0){
+// //                     char message1[100];
+// //                     strcpy(message1, filesData.recordArray[0][j]);
 
-//                     strcat(temp, message1);
+// //                     strcat(temp, message1);
 
-//                     printf("%s", temp); // send(newSocket, temp, strlen(temp), 0);
+// //                     printf("%s", temp); // send(newSocket, temp, strlen(temp), 0);
+// //                   }
+
+//                     char message[100];
+//                     strcpy(message, filesData.recordArray[i][j]);
+//                     strcat(message, "   ");
+
+//                     if(j != 4 && j != 5){
+//                       printf("%s", message); //send(newSocket, message2, strlen(message2), 0);
+//                     }
+//                 }
+//               printf("\n");
+//             }
+//         }
+//         else if ((strcmp(userInput, "2") == 0))
+//         {
+//             printToClient = "\nEnter a ref to make an inquiry:\n";
+//             display(printToClient);
+//             // TODO: add Nick and Harika's logic to print out the details of the ref selected
+//             char userRef[256];
+//             fgets(userRef, 256, stdin);
+//             char temp[100];
+//             strcpy(temp, userRef);
+//             userInput[strcspn(userRef, "\n")] = 0;
+//             //Print out input
+//             for (int i = 1; i < filesData.sizeOfRow; i++)
+//             {
+//                 for (int j = 0; j < filesData.sizeOfCol; j++)
+//                 {
+//                   if(strncmp(filesData.recordArray[i][0], userRef, strlen(userRef)) == 0){
+//                     //stuff
 //                   }
-
-                    char message[100];
-                    strcpy(message, filesData.recordArray[i][j]);
-                    strcat(message, "   ");
-
-                    if(j != 4 && j != 5){
-                      printf("%s", message); //send(newSocket, message2, strlen(message2), 0);
-                    }
-                }
-              printf("\n");
-            }
-        }
-        else if ((strcmp(userInput, "2") == 0))
-        {
-            printToClient = "\nEnter a ref to make an inquiry:\n";
-            display(printToClient);
-            // TODO: add Nick and Harika's logic to print out the details of the ref selected
-            char userRef[256];
-            fgets(userRef, 256, stdin);
-            char temp[100];
-            strcpy(temp, userRef);
-            userInput[strcspn(userRef, "\n")] = 0;
-            //Print out input
-            for (int i = 1; i < filesData.sizeOfRow; i++)
-            {
-                for (int j = 0; j < filesData.sizeOfCol; j++)
-                {
-                  if(strncmp(filesData.recordArray[i][0], userRef, strlen(userRef)) == 0){
-                    //stuff
-                  }
-                }
-            }
-        }
-        else if ((strcmp(userInput, "3") == 0))
-        {
+//                 }
+//             }
+//         }
+//         else if ((strcmp(userInput, "3") == 0))
+//         {
           
-        }
-        else if ((strcmp(userInput, "4") == 0))
-        {
+//         }
+//         else if ((strcmp(userInput, "4") == 0))
+//         {
           
-        }
-        else
-        {
-            printf("\nInvlaid input. Please try again.\n");
-        }
-    }
+//         }
+//         else
+//         {
+//             printf("\nInvlaid input. Please try again.\n");
+//         }
+//     }
 
-    return 0;
-}
+//     return 0;
+// }

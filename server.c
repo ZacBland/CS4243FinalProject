@@ -21,7 +21,10 @@
 #include "sendDataOverMsgQueues.h"
 #include "readDataFromMsgQueues.h"
 #include "Piping.h"
- 
+#include "readFile.h"
+
+//gcc server.c client.c Piping.c readFile.c semaphore.c queue.c sendDataOverMsgQueues.c readDataFromMsgQueues.c -o ./main 
+
 char readArray[720][7 * 250];
 
 int num_of_assistants = 2;
@@ -121,22 +124,118 @@ void assistant_thread(void* arg){
         //wait for client socket in array
         while(assist_sems[index] == 0);
         int socket = assist_sems[index];
-
+        long total_cost = 0;
         //run menu options 
 
         //TODO : ADD MENU HERE
-        while(1){
-            char buffer[MAXCHAR];
-            if(recv(socket, buffer, MAXCHAR, 0) < 0){
-                perror("send");
-            }   
 
-            printf("%s\n", buffer);
-            //exit condition
-            if(atoi(buffer) == 4){
-                break;
+        int end = 0;
+        char userInput[256];
+
+        // Read file
+        char filename[] = "cartier_catalog.txt";
+        char *printToClient;
+        catalogStruct filesData = readFile(filename);
+
+        int input_pipe[2];
+        int output_pipe[2];
+        if(pipe(input_pipe) < 0) {
+            perror("input pipe init");
+        }
+        if(pipe(output_pipe) < 0) {
+            perror("output pipe init");
+        }
+
+        while (end == 0)
+        {
+
+            printToClient = "\nEnter the number of the option to select it\n1. Looking at the jewelry menu\n2. Making specific jewelry inquiry\n3. Making purchase\n4. Returning the purchase\n5. Exit\n\n";
+            display(printToClient);
+
+            fgets(userInput, 256, stdin);
+            char temp[100];
+            strcpy(temp, userInput);
+            userInput[strcspn(userInput, "\n")] = 0;
+
+            if ((strncmp(userInput, "exit", 3) == 0) || (strncmp(userInput, "Exit", 3) == 0) || (strncmp(userInput, "5", 1) == 0))
+            {
+                printToClient = "\nExiting program...";
+                display(printToClient);
+                end = 1;
+            }
+            else if ((strcmp(userInput, "1") == 0))
+            {
+                printToClient = "\nPrinting jewelry menu:\n";
+                display(printToClient);
+
+                // Display the contents of catalog struct
+                for (int i = 1; i < filesData.sizeOfRow; i++)
+                {
+                    for (int j = 0; j < filesData.sizeOfCol; j++)
+                    {
+                        char message[100];
+                        strcpy(message, filesData.recordArray[i][j]);
+                        strcat(message, "   ");
+
+                        if(j != 4 && j != 5){
+                        printf("%s", message); //send(newSocket, message2, strlen(message2), 0);
+                        }
+                    }
+                printf("\n");
+                }
+            }
+            else if ((strcmp(userInput, "2") == 0))
+            {
+                printToClient = "\nEnter a ref to make an inquiry:\n";
+                display(printToClient);
+                char userRef[256];
+                fgets(userRef, 256, stdin);
+                char temp[100];
+                strcpy(temp, userRef);
+                userInput[strcspn(userRef, "\n")] = 0;
+
+                write(input_pipe[1], "specific", strlen("specific") + 1);
+                piping(temp, input_pipe, output_pipe, filesData.sizeOfRow, filesData.sizeOfCol, filesData.recordArray);
+
+            }
+            else if ((strcmp(userInput, "3") == 0))
+            {
+                write(input_pipe[1], "purchase", strlen("purchase") + 1);
+                piping(temp, input_pipe, output_pipe, filesData.sizeOfRow, filesData.sizeOfCol, filesData.recordArray);
+                char pipe_output[254];
+                read(output_pipe[0], pipe_output, sizeof(pipe_output));
+                long l = strtol(pipe_output, NULL, 10);
+                total_cost += l;
+                printf("%ld added to total. Current total: %ld\n", l, total_cost);
+            }
+            else if ((strcmp(userInput, "4") == 0))
+            {
+                write(input_pipe[1], "return", strlen("return") + 1);
+                piping(temp, input_pipe, output_pipe, filesData.sizeOfRow, filesData.sizeOfCol, filesData.recordArray);
+                char pipe_output[254];
+                read(output_pipe[0], pipe_output, sizeof(pipe_output));
+                long l = strtol(pipe_output, NULL, 10);
+                total_cost -= l;
+                printf("%ld removed from total. Current total: %ld\n", l, total_cost);
+            }
+            else
+            {
+                printf("\nInvlaid input. Please try again.\n");
             }
         }
+
+        // while(1){
+        //     char buffer[MAXCHAR];
+        //     if(recv(socket, buffer, MAXCHAR, 0) < 0){
+        //         perror("send");
+        //     }   
+
+        //     printf("%s\n", buffer);
+        //     //exit condition
+        //     if(atoi(buffer) == 4){
+        //         break;
+        //     }
+        // }
 
         //Once finished, give back assistant semaphore
         post(assist_sems, index);
@@ -183,7 +282,7 @@ int main() {
  
     // TODO: Read and store options.txt
     //struct Option* options = readOptions("../options.txt", 2);
-    struct file_options file_data;
+    //struct file_options file_data;
 
     //Create semaphore arrays
     assist_sems = create_semaphores(num_of_assistants);
@@ -226,30 +325,17 @@ int main() {
         add(q, client_sock);
         num_clients++;
         clientPID = fork();
-        
-
-
 
         if(clientPID == 0)
         {
             // receiver
-            int input_pipe[2];
-            int output_pipe[2];
-            if(pipe(input_pipe) < 0) {
-                perror("input pipe init");
-            }
-            if(pipe(output_pipe) < 0) {
-                perror("output pipe init");
-            }
-
             char ***file = readDataFromMsgQueues(num_clients);
             char *ref = "\0"; // blank or terminating character if not necessary for command
-            piping(ref, input_pipe, output_pipe, &file_data.rows, &file_data.columns, file);
             
 
         } else if(clientPID > 0) {
             // sender
-            sendDataOverMsgQueues(file_data, num_clients);
+            //sendDataOverMsgQueues(file_data, num_clients);
             wait(0);
         }
     }

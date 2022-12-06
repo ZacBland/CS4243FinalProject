@@ -40,7 +40,14 @@ int main() {
         exit(1);
     }
     
-    printf("Connected to the server.\n");
+    printf("Connected to the server.\n\n");
+
+    printf("All the shop assistants are currently busy assisting the customers.\n");
+    printf("You are placed in the waiting room.\n");
+
+    bzero(buffer, MAXCHAR);
+    recv(sock, buffer, sizeof(buffer), 0);
+    printf("Your current number in the waiting room is %s.\n", buffer);
 
     for (;;) {
         bzero(buffer, MAXCHAR);

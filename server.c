@@ -20,11 +20,13 @@
  
 char readArray[720][7 * 250];
 
-int num_of_assistants = 2;
-int num_of_sofas = 1;
+int num_of_assistants;
+int num_of_sofas;
+int queue_max;
 queue *q;
 int * assist_sems;
 int * couch_sems;
+int queue_count = 0;
 
 void manage_couches(){
     /**
@@ -33,13 +35,15 @@ void manage_couches(){
 
     //Loop indefinitely
     while(1){
-
+        
         //wait for queue to fill
         while(isEmpty(q));
 
         //get next client in queue
         int next = pop(q);
+        queue_count--;
         
+        sleep(1);
         //send message to client
         if(send(next, "You are next in line for a sofa.\n", 50, 0) < 0){
             perror("send");
@@ -72,6 +76,7 @@ void manage_assistants(){
             if(couch_sems[i] != 0){
                 int socket = couch_sems[i];
 
+                sleep(1);
                 //send message to client
                 if(send(socket, "You are next in line for an assistant.\n", 50, 0) < 0){
                     perror("send");
@@ -139,7 +144,7 @@ void assistant_thread(void* arg){
     }
 }
 
-int main() {
+int main(int argc, char* argv[]) {
  
     int server_sock, client_sock;
     struct sockaddr_in serveraddr = {0}, client_addr = {0};
@@ -179,13 +184,17 @@ int main() {
     // TODO: Read and store options.txt
     //struct Option* options = readOptions("../options.txt", 2);
 
+    num_of_assistants = atoi(argv[1]);
+    num_of_sofas = atoi(argv[2]);
+    queue_max = atoi(argv[3]);
+    
     //Create semaphore arrays
     assist_sems = create_semaphores(num_of_assistants);
     couch_sems = create_semaphores(num_of_sofas);
     
     //Initialize queue
     q = malloc(sizeof(queue));
-    init(q, QUEUE_MAX);
+    init(q, queue_max);
 
     //Create manager threads
     pthread_t couch_manager;
@@ -218,6 +227,14 @@ int main() {
 
         //add client to queue
         add(q, client_sock);
+        queue_count++;
+        
+        char msg[10];
+        sprintf(msg, "%d", queue_count);
+
+        if(send(client_sock, msg, 10, 0) < 0){
+            perror("send");
+        }
     }
 
     //Join all threads

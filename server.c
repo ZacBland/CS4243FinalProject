@@ -33,6 +33,14 @@ queue *q;
 int * assist_sems;
 int * couch_sems;
 
+void display(char *printToClient)
+{
+    // Testing code
+    //printf("%s", printToClient);
+    // Use send code when implemented in server, and replace newSocket with the name of the socket.
+    send(client_sock, printToClient, strlen(printToClient), 0);
+}
+
 void manage_couches(){
     /**
      * Thread function to manage couch semaphores
@@ -351,5 +359,7 @@ int main() {
  
     return 0;
 }
+
+
  
  

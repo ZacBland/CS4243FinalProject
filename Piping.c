@@ -1,12 +1,12 @@
 // Group: Group A
 // Author: Nick Schirloff
 // Email: nick.schirloff@okstate.edu
-// Date: 11/11/22
-// Description: Groundwork on piping between processes. Needs to implement file information processing/storing.
-//              Takes reference id, and command to conduct on id. Finds the id within a given file/string array,
-//              and operates on the item based on the command.
-//  gcc Piping.c -o ./a.out
-//  a.out
+// Date: 12/05/22
+// Description: Receives optional refID from user, and either displays information, displays a specific item,
+//              purchases an item and removes one from its quantity, or returns an item, adding one to its quantitiy.
+//              Output pipe is written to based off the required input, whether a full string of the items in the catalog,
+//              the item, or its value.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
